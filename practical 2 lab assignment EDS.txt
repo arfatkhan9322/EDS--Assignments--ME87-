@@ -1,0 +1,18 @@
+2.2.1. Linear search Technique
+
+def linear_search(arr,key):
+	for index in range(len(arr)):
+		if arr[index] == key:
+			return index
+	return "Not found"
+arr = list(map(int, input().split()))
+key = int(input())
+result = linear_search(arr, key)
+print(result)
+
+
+2.2.2. Captain of the Team
+
+heights = list(map(int,input().split()))
+tallest = max(heights)
+print(tallest)

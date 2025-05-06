@@ -1,0 +1,51 @@
+1.2.1. Pass or Fail
+
+def calculate_grade(num_courses, marks):
+    if any(mark < 40 for mark in marks):
+        print("Fail")
+        return
+    
+    aggregate_percentage = sum(marks) / num_courses
+    
+    print(f"Aggregate Percentage: {aggregate_percentage:.2f}")
+    
+    if aggregate_percentage > 75:
+        print("Grade: Distinction")
+    elif aggregate_percentage >= 60:
+        print("Grade: First Division")
+    elif aggregate_percentage >= 50:
+        print("Grade: Second Division")
+    elif aggregate_percentage >= 40:
+        print("Grade: Third Division")
+    
+num_courses = int(input())
+marks = list(map(int, input().split()))
+
+
+calculate_grade(num_courses, marks)
+
+1.2.2. Fibonacci series using Recursive Function
+
+def fib(n):
+	if n<=1:
+		return n
+	else:
+		return fib(n-1)+fib(n-2)
+n=int(input("Enter terms for Fibonacci series: "))
+for i in range (n):
+      print(fib(i),end=" ")
+
+1.2.3. Pattern - 1
+
+
+num=int(input())
+for i in range(1,num+1):
+	print("* "*i)
+
+1.2.4. Pattern - 2
+
+n=int(input())
+for i in range(1,n+1,):
+	for j in range(1,i+1,):
+		print(j,end=' ')
+	print()

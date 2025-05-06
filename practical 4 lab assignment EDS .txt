@@ -1,0 +1,274 @@
+4.2.1. Month with the Highest Total Sales
+
+import pandas as pd
+
+# Prompt the user for the file name
+file_name = input()
+
+# Load the data
+df = pd.read_csv(file_name)
+
+
+df["Date"] = pd.to_datetime(df["Date"])
+df["Month"] = df["Date"].dt.strftime("%Y-%m")
+df["Total Sales"] = df["Quantity"] * df["Price"]
+
+# Find the month with the highest total sales
+sales_by_month = df.groupby("Month")["Total Sales"].sum()
+best_month = sales_by_month.idxmax()
+highest_sales = sales_by_month.max()
+print(f"Best month: {best_month}")
+print(f"Total sales: ${highest_sales:.2f}")
+
+4.2.2. Best Selling Product
+
+import pandas as pd
+
+# Prompt the user for the file name
+file_name = input()
+
+# Load the data
+df = pd.read_csv(file_name)
+
+
+# Find the product with 
+product_sales = df.groupby("Product")["Quantity"].sum()
+best_product = product_sales.idxmax()
+highest_quantity = product_sales.max()
+
+# Display the result
+print(f"Best selling product: {best_product}")
+print(f"Total quantity sold: {highest_quantity}")
+
+4.2.3. City that Sold the Most Products
+
+import pandas as pd
+
+# Prompt the user for the file name
+file_name = input()
+
+# Load the data
+df = pd.read_csv(file_name)
+
+# write code here
+city_sales = df.groupby("City")["Quantity"].sum()
+
+# find the city with highest total quantity sold 
+best_city = city_sales.idxmax()
+
+
+# Display the result
+print(f"City sold the most products: {best_city}")
+
+4.2.4. Most Frequently Sold Product Pairs
+
+import pandas as pd
+from itertools import combinations
+from collections import Counter
+
+# Prompt user to input the file name
+file_name = input()
+
+# Read data from the specified CSV file
+df = pd.read_csv(file_name)
+
+# write the code
+grouped = df.groupby("Date")["Product"].apply(list)
+
+product_pair = []
+for products in grouped:
+	if len(products) > 1:
+		product_pair.extend(combinations(sorted(products),2))
+
+pair_counts = Counter(product_pair)
+
+if pair_counts:
+	max_count = max(pair_counts.values())
+	most_common_pairs = [pair for pair,count in pair_counts.items() if count == max_count]
+	for pair in sorted(most_common_pairs):
+		print(f"{pair[0]} and {pair[1]}: {max_count} times")
+
+
+4.2.5. Titanic Dataset Analysis and Data Cleaning
+
+import pandas as pd
+import numpy as np
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# 1. Display the first 5 rows of the dataset
+print(data.head())
+
+# 2. Display the last 5 rows of the dataset
+print(data.tail())
+
+# 3. Get the shape of the dataset
+print(data.shape)
+
+# 4. Get a summary of the dataset (info)
+print(data.info())
+
+# 5. Get basic statistics of the dataset
+print(data.describe())
+
+# 6. Check for missing values
+print(data.isnull().sum())
+
+# 7. Fill missing values in the ‘Age’ column with the median age
+median_age = data['Age'].median()
+data['Age'].fillna(median_age, inplace=True)
+# 8. Fill missing values in the ‘Embarked’ column with the mode
+mode_embarked = data['Embarked'].mode()[0]
+data['Embarked'].fillna(mode_embarked, inplace=True)
+# 9. Drop the ‘Cabin’ column due to many missing values
+data.drop('Cabin', axis=1, inplace=True)
+
+# 10. Create a new column 'FamilySize’ by adding ‘SibSp' and ‘Parch'
+data['FamilySize'] = data['SibSp'] + data['Parch']
+
+4.2.6. Titanic Dataset Analysis and Data Cleaning - 2
+
+import pandas as pd
+import numpy as np
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+data['FamilySize'] = data['SibSp'] + data['Parch']
+
+# 1. Create a new column ‘IsAlone' (1 if alone, 0 otherwise)
+data['IsAlone'] = np.where(data['FamilySize'] == 0, 1, 0)
+
+# 2. Convert ‘Sex' to numeric (male: 0, female: 1)
+data['Sex'] = data['Sex'].map({'male': 0, 'female': 1})
+
+# 3. One-hot encode the ‘Embarked' column
+data = pd.get_dummies(data, columns=['Embarked'])
+
+# 4. Get the mean age of passengers
+mean_age = data['Age'].mean()
+print( mean_age)
+
+# 5. Get the median fare of passengers
+median_fare = data['Fare'].median()
+print( median_fare)
+
+# 6. Get the number of passengers by class
+print( data['Pclass'].value_counts())
+
+# 7. Get the number of passengers by gender
+print( data['Sex'].value_counts())
+
+# 8. Get the number of passengers by survival status
+print( data['Survived'].value_counts())
+
+# 9. Calculate the overall survival rate
+survival_rate = data['Survived'].mean()
+print(format(survival_rate))
+
+# 10. Calculate the survival rate by gender
+survival_by_gender = data.groupby('Sex')['Survived'].mean()
+print( survival_by_gender)
+
+4.2.7. Titanic Dataset Analysis and Data Cleaning - 3
+
+import pandas as pd
+import numpy as np
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+data['FamilySize'] = data['SibSp'] + data['Parch']
+data['IsAlone'] = np.where(data['FamilySize'] > 0, 0, 1)
+data = pd.get_dummies(data, columns=['Embarked'], drop_first=True)
+
+# 1. Calculate the survival rate by class
+
+print(data.groupby('Pclass') ['Survived'].mean())
+#2. Calculate the survival rate by embarked location (Embarked_S)
+print(data.groupby('Embarked_S') ['Survived'].mean())
+#3. Calculate the survival rate by family size
+print(data.groupby('FamilySize') ['Survived'].mean())
+#4. Calculate the survival rate by being alone
+print(data.groupby('IsAlone') ['Survived'].mean())
+#5. Get the average fare by class
+print(data.groupby('Pclass') ['Fare'].mean())
+#6. Get the average age by class
+print(data.groupby('Pclass') ['Age'].mean())
+#7. Get the average age by survival status
+print(data.groupby('Survived')['Age'].mean())
+#8. Get the average fare by survival status
+print(data.groupby('Survived') ['Fare'].mean())
+#9. Get the number of survivors by class (sort by values descending)
+print(data[data['Survived'] == 1] ['Pclass'].value_counts())
+#10. Get the number of non-survivors by class (sort by values descending)
+print(data[data['Survived'] == 0] ['Pclass'].value_counts())
+# 2. Calculate the survival rate by embarked location
+
+
+4.2.8. Titanic Dataset Analysis and Data Cleaning - 4
+
+import pandas as pd
+import numpy as np
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+data = pd.get_dummies(data, columns=['Embarked'], drop_first=True)
+
+
+survivors_by_gender = data[data['Survived'] == 1]['Sex'].value_counts()
+print(survivors_by_gender)
+
+non_survivors_by_gender = data[data['Survived'] == 0]['Sex'].value_counts()
+print(non_survivors_by_gender)
+
+#3. Get the number of survivors by embarked location (Embarked_S)
+
+survivors_by_embarked_s= data[data['Survived'] == 1] ['Embarked_S'].value_counts()
+
+print(survivors_by_embarked_s)
+
+#4. Get the number of non-survivors by embarked location (Embarked_S)
+
+non_survivors_by_embarked_s= data[data['Survived'] == 0]['Embarked_S'].value_counts()
+
+print(non_survivors_by_embarked_s)
+
+#-5. Percentage of children (Age < 18) who survived
+
+children = data [data['Age'] < 18]
+
+children_survival_rate = children['Survived'].mean()
+
+print(children_survival_rate)
+
+#-6. Percentage of adults (Age->--18) who survived
+
+adults = data[data['Age'] >= 18]
+
+adults_survival_rate = adults['Survived'].mean()
+
+print(adults_survival_rate)
+
+#7. Median age of survivors
+
+median_age_survivors = data[data['Survived'] == 1] ['Age'].median()
+
+print(median_age_survivors)
+
+#8. Median age of non-survivors
+
+median_age_non_survivors = data[data['Survived'] == 0]['Age'].median()
+
+print(median_age_non_survivors)
+
+# 9. Median fare of survivors
+
+median_fare_survivors = data[data['Survived'] == 1] ['Fare'].median()
+
+print(median_fare_survivors)
+
+# 10. Median fare of non-survivors
+
+median_fare_non_survivors = data[data['Survived'] == 0] ['Fare'].median()
+print(median_fare_non_survivors)
+
